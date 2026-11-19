@@ -20,17 +20,13 @@ def test_db_001_send_money_button_redirects(logged_in_page):
 @pytest.mark.positive
 @pytest.mark.high
 def test_db_002_view_all_redirects_to_transaction_history(logged_in_page):
-
     """DB-002: Verify View All button redirects to Transaction History."""
-
     dashboard = DashboardPage(logged_in_page)
     logged_in_page.pause()
     dashboard.click_view_all()
-
-    logged_in_page.wait_for_selector(
-        DashboardPage.TRANSACTION_HISTORY_TITLE
-    )
-
+    logged_in_page.pause()
+    logged_in_page.wait_for_url("https://dummypay.vercel.app/history")
+    assert logged_in_page.url == "https://dummypay.vercel.app/history"
     assert dashboard.is_transaction_history_visible()
 
 
@@ -40,16 +36,10 @@ def test_db_002_view_all_redirects_to_transaction_history(logged_in_page):
 def test_db_003_view_all_notifications_navigates(logged_in_page):
     """DB-003: Verify that "View all" in Recent notifications navigates to the Notifications page."""
     dashboard = DashboardPage(logged_in_page)
-
     logged_in_page.pause()
     dashboard.click_notifications_view_all()
-
     logged_in_page.pause()
-
     logged_in_page.wait_for_url("https://dummypay.vercel.app/notifications")
     assert logged_in_page.url == "https://dummypay.vercel.app/notifications"
     assert logged_in_page.is_visible("h1:has-text('Notifications')")
-
-
-
 
