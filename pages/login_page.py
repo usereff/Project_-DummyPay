@@ -25,6 +25,13 @@ class LoginPage(BasePage):
         self.fill(self.PASSWORD_INPUT, password)
 
     def click_submit(self):
+        self.page.locator(self.SUBMIT_BUTTON).wait_for(state="visible")
+
+        self.page.wait_for_function(
+            """selector => document.querySelector(selector)?.disabled === false""",
+            arg=self.SUBMIT_BUTTON
+        )
+
         self.click(self.SUBMIT_BUTTON)
 
     def login(self, email: str, password: str):
