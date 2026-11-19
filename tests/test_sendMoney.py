@@ -1,5 +1,5 @@
 import pytest
-from pages.test_sendMoney_page import SendMoneyPage
+from pages.sendMoney_page import SendMoneyPage
 
 @pytest.mark.regression
 @pytest.mark.negative
