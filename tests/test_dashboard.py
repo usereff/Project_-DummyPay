@@ -13,3 +13,21 @@ def test_db_001_send_money_button_redirects(logged_in_page):
 
     logged_in_page.wait_for_url("https://dummypay.vercel.app/send")
     assert logged_in_page.url == "https://dummypay.vercel.app/send"
+
+
+@pytest.mark.smoke
+@pytest.mark.positive
+@pytest.mark.high
+def test_db_002_view_all_redirects_to_transaction_history(logged_in_page):
+
+    """DB-002: Verify View All button redirects to Transaction History."""
+
+    dashboard = DashboardPage(logged_in_page)
+    # logged_in_page.pause()
+    dashboard.click_view_all()
+
+    logged_in_page.wait_for_selector(
+        DashboardPage.TRANSACTION_HISTORY_TITLE
+    )
+
+    assert dashboard.is_transaction_history_visible()
