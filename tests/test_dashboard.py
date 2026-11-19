@@ -11,4 +11,5 @@ def test_db_001_send_money_button_redirects(logged_in_page):
 
     dashboard.click_send_money()
 
-    assert "send" in logged_in_page.url.lower()
+    logged_in_page.wait_for_url("https://dummypay.vercel.app/send")
+    assert logged_in_page.url == "https://dummypay.vercel.app/send"

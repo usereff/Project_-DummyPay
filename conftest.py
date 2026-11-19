@@ -1,9 +1,7 @@
 import pytest
-from pathlib import Path
 from playwright.sync_api import sync_playwright
-from utilities.config import BASE_URL, EMAIL, PASSWORD, HEADLESS
-
-AUTH_FILE = Path(__file__).parent / ".auth" / "state.json"
+from pages.login_page import LoginPage
+from utilities.config import EMAIL, PASSWORD, HEADLESS
 
 
 @pytest.fixture(scope="session")
@@ -17,28 +15,23 @@ def browser_instance():
         browser.close()
 
 
-@pytest.fixture(scope="session")
-def auth_state(browser_instance):
-    """Log in once per run and save the session to a file."""
-    AUTH_FILE.parent.mkdir(exist_ok=True)
+@pytest.fixture
+def login_page(browser_instance):
+    """Clean, NOT logged-in window. Used by the login tests."""
     context = browser_instance.new_context()
     page = context.new_page()
-    page.goto(f"{BASE_URL}/login")
-    page.fill("input[type='email']", EMAIL)
-    page.fill("input[type='password']", PASSWORD)
-    page.click("button[type='submit']")
-    page.wait_for_selector("text=Total balance")
-    context.storage_state(path=str(AUTH_FILE))
+    yield LoginPage(page)
     context.close()
-    return str(AUTH_FILE)
 
 
 @pytest.fixture
-def logged_in_page(browser_instance, auth_state):
-    """A fresh page that is already logged in, opened on the dashboard."""
-    context = browser_instance.new_context(storage_state=auth_state)
+def logged_in_page(browser_instance):
+    """One window: logs in, lands on the dashboard, then the test continues in the same window."""
+    context = browser_instance.new_context()
     page = context.new_page()
-    page.goto(BASE_URL)
-    page.wait_for_selector("text=Total balance")
+    login = LoginPage(page)
+    login.open_login()
+    login.login(EMAIL, PASSWORD)
+    assert login.is_dashboard_loaded(), "Setup failed: could not log in. Check your .env credentials."
     yield page
     context.close()
