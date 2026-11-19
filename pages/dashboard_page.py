@@ -10,8 +10,7 @@ class DashboardPage(BasePage):
     NOTIFICATIONS_VIEW_ALL = "a[href='/notifications']"
     
     # View All Locators
-    VIEW_ALL_BUTTON = "text=View all"
-    TRANSACTION_HISTORY_TITLE = "h1:has-text('Transaction History')"
+    VIEW_ALL_BUTTON = "main a[href='/transactions']"    TRANSACTION_HISTORY_TITLE = "h1:has-text('Transaction History')"
 
     def click_view_all(self):
         self.page.click(self.VIEW_ALL_BUTTON)
