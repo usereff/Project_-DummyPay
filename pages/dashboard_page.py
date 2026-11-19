@@ -7,6 +7,7 @@ class DashboardPage(BasePage):
     # Locators
     SEND_MONEY_BUTTON = "a:has-text('Send money'), button:has-text('Send money')"
     TOTAL_BALANCE = "text=Total balance"
+    NOTIFICATIONS_VIEW_ALL = "a[href='/notifications']"
     
     # View All Locators
     VIEW_ALL_BUTTON = "text=View all"
@@ -23,3 +24,7 @@ class DashboardPage(BasePage):
 
     def is_total_balance_visible(self) -> bool:
         return self.page.is_visible(self.TOTAL_BALANCE)
+
+
+    def click_notifications_view_all(self):
+        self.page.click(self.NOTIFICATIONS_VIEW_ALL)
