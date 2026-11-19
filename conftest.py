@@ -65,9 +65,10 @@ def logged_in_page(browser_instance, auth_state):
     )
 
     page = context.new_page()
+    
 
     page.goto(BASE_URL)
-
+    page.wait_for_selector("text=Total balance")
     yield page
 
     context.close()
