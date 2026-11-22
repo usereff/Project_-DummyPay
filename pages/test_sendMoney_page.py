@@ -13,6 +13,7 @@ class SendMoneyPage(BasePage):
     RECIPIENT_INPUT = "#recipient-email"
     FIND_RECIPIENT_BUTTON = "button:has-text('Find recipient')"
     RECIPIENT_ERROR = "text=No registered user found with this email address."
+    SELF_TRANSFER_ERROR = "text=You cannot send money to yourself."
     ACTIVE_STEP = "[aria-current='step']"
     CONTINUE_BUTTON = "button:has-text('Continue')"
     AMOUNT_INPUT = "#transfer-amount"
@@ -42,6 +43,9 @@ class SendMoneyPage(BasePage):
 
     def click_continue(self):
         self.click(self.CONTINUE_BUTTON)
+
+    def select_amount_mode(self, mode: str):
+        self.page.get_by_role("radio", name=mode, exact=True).click()
 
     def enter_amount(self, amount: str):
         self.fill(self.AMOUNT_INPUT, amount)

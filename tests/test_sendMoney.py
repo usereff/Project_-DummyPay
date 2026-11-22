@@ -5,7 +5,29 @@ from playwright.sync_api import expect
 
 from pages.test_sendMoney_page import SendMoneyPage
 from pages.wallets_page import WalletsPage
-from utilities.config import RECIPIENT_EMAIL
+from utilities.config import EMAIL, RECIPIENT_EMAIL
+
+
+@pytest.mark.regression
+@pytest.mark.negative
+@pytest.mark.high
+def test_sm_001_unregistered_email_shows_error(logged_in_page):
+    """SM-001: Verify that an error is displayed when entering an unregistered email."""
+
+    send_money = SendMoneyPage(logged_in_page)
+    # logged_in_page.pause()
+    # Arrange
+    unregistered_email = "notregistered123456@example.com"
+
+    # Act
+    send_money.open("/send")
+    send_money.enter_recipient_email(unregistered_email)
+    send_money.click_find_recipient()
+
+    # Assert
+    assert send_money.is_unregistered_email_error_visible(), (
+        "Expected error message was not displayed for an unregistered email."
+    )
 
 
 @pytest.mark.regression
@@ -19,7 +41,6 @@ def test_sm_002_registered_user_transfer_completes(logged_in_page):
         "Set DUMMYPAY_RECIPIENT_EMAIL to the email of an existing recipient."
     )
     send_money = SendMoneyPage(logged_in_page)
-    logged_in_page.pause()
 
     send_money.open("/send")
     send_money.wait_for_step("Recipient")
@@ -87,20 +108,70 @@ def test_sm_002_registered_user_transfer_completes(logged_in_page):
 @pytest.mark.regression
 @pytest.mark.negative
 @pytest.mark.high
-def test_sm_001_unregistered_email_shows_error(logged_in_page):
-    """SM-001: Verify that an error is displayed when entering an unregistered email."""
+def test_sm_003_cannot_send_money_to_self(logged_in_page):
+    """SM-003: Verify that a user cannot send money to their own email."""
 
     send_money = SendMoneyPage(logged_in_page)
-    # logged_in_page.pause()
-    # Arrange
-    unregistered_email = "notregistered123456@example.com"
 
-    # Act
     send_money.open("/send")
-    send_money.enter_recipient_email(unregistered_email)
+    send_money.wait_for_step("Recipient")
+    send_money.enter_recipient_email(EMAIL)
     send_money.click_find_recipient()
 
-    # Assert
-    assert send_money.is_unregistered_email_error_visible(), (
-        "Expected error message was not displayed for an unregistered email."
+    expect(logged_in_page.locator(send_money.SELF_TRANSFER_ERROR)).to_be_visible()
+    send_money.wait_for_step("Recipient")
+    expect(logged_in_page.locator(send_money.CONTINUE_BUTTON)).to_have_count(0)
+
+
+@pytest.mark.regression
+@pytest.mark.negative
+@pytest.mark.high
+@pytest.mark.parametrize(
+    ("amount_mode", "amount_case"),
+    [
+        pytest.param("I send", "zero", id="i-send-zero"),
+        pytest.param("I send", "over-balance", id="i-send-over-balance"),
+        pytest.param("Recipient gets", "zero", id="recipient-gets-zero"),
+        pytest.param("Recipient gets", "over-balance", id="recipient-gets-over-balance"),
+    ],
+)
+def test_sm_004_invalid_amount_shows_error_and_blocks_transfer(
+    logged_in_page, amount_mode, amount_case
+):
+    """SM-004: Verify zero and over-balance amounts are rejected in both amount modes."""
+
+    assert RECIPIENT_EMAIL, (
+        "Set DUMMYPAY_RECIPIENT_EMAIL to the email of an existing recipient."
     )
+    send_money = SendMoneyPage(logged_in_page)
+
+    send_money.open("/send")
+    send_money.wait_for_step("Recipient")
+    send_money.enter_recipient_email(RECIPIENT_EMAIL)
+    send_money.click_find_recipient()
+    expect(logged_in_page.get_by_text(RECIPIENT_EMAIL, exact=True)).to_be_visible()
+    send_money.click_continue()
+    send_money.wait_for_step("Amount")
+    send_money.select_amount_mode(amount_mode)
+
+    _, available_balance = send_money.get_selected_wallet_balance()
+
+    if amount_case == "zero":
+        amount = "0"
+    else:
+        amount = str(available_balance + Decimal("0.01"))
+
+    send_money.enter_amount(amount)
+    send_money.click_review_transfer()
+
+    error = logged_in_page.get_by_role("alert")
+    if amount_case == "zero":
+        expect(error).to_have_text("Amount must be greater than zero.")
+    elif amount_mode == "I send":
+        expect(error).to_contain_text("You only have")
+        expect(error).to_contain_text(f"{available_balance:,.2f} available.")
+    else:
+        expect(error).to_have_text("Insufficient funds in the selected wallet.")
+
+    send_money.wait_for_step("Amount")
+    expect(logged_in_page.get_by_role("button", name="Confirm & send")).to_have_count(0)
