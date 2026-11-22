@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: dummy-pay-ci
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    environment: myEnv 
+    timeout-minutes: 30
+    env:
+      DUMMYPAY_EMAIL: ${{ secrets.DUMMYPAY_EMAIL }}
+      DUMMYPAY_PASSWORD: ${{ secrets.DUMMYPAY_PASSWORD }}
+      DUMMYPAY_RECIPIENT_EMAIL: ${{ secrets.DUMMYPAY_RECIPIENT_EMAIL }}
+      HEADLESS: "true"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          if [[ -z "$DUMMYPAY_EMAIL" || -z "$DUMMYPAY_PASSWORD" || -z "$DUMMYPAY_RECIPIENT_EMAIL" ]]; then
+            echo "::error::Configure DUMMYPAY_EMAIL, DUMMYPAY_PASSWORD, and DUMMYPAY_RECIPIENT_EMAIL as secrets in the test environment."
+            exit 1
+          fi
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Install Playwright Chromium
+        run: python -m playwright install --with-deps chromium
+
+      - name: Run tests
+        run: python -m pytest
