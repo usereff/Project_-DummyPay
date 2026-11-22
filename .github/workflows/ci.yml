@@ -12,6 +12,7 @@ concurrency:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    environment: myEnv 
     timeout-minutes: 30
     env:
       DUMMYPAY_EMAIL: ${{ secrets.DUMMYPAY_EMAIL }}
@@ -33,7 +34,7 @@ jobs:
         shell: bash
         run: |
           if [[ -z "$DUMMYPAY_EMAIL" || -z "$DUMMYPAY_PASSWORD" || -z "$DUMMYPAY_RECIPIENT_EMAIL" ]]; then
-            echo "::error::Set DUMMYPAY_EMAIL, DUMMYPAY_PASSWORD, and DUMMYPAY_RECIPIENT_EMAIL in repository secrets."
+            echo "::error::Configure DUMMYPAY_EMAIL, DUMMYPAY_PASSWORD, and DUMMYPAY_RECIPIENT_EMAIL as secrets in the test environment."
             exit 1
           fi
 
