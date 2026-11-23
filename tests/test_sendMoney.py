@@ -8,6 +8,62 @@ from pages.wallets_page import WalletsPage
 from utilities.config import EMAIL, RECIPIENT_EMAIL
 
 
+def _transaction_detail_value(transaction_details, label):
+    value = transaction_details.locator(
+        "dt", has_text=label
+    ).locator("xpath=following-sibling::dd")
+    expect(value).to_be_visible()
+    return value.inner_text().strip()
+
+
+@pytest.mark.parametrize(
+    ("review_text", "expected_summary"),
+    [
+        pytest.param(
+            """You send
+₪1.00
+Sending currency
+ILS
+Exchange rate
+No conversion (same currency)
+Recipient gets
+₪1.00""",
+            (
+                Decimal("1.00"),
+                "ILS",
+                Decimal("1"),
+                "ILS",
+                "ILS",
+                Decimal("1.00"),
+            ),
+            id="same-currency-no-conversion",
+        ),
+        pytest.param(
+            """You send
+$1,000.00
+Sending currency
+USD
+Exchange rate
+1 USD = 0.92 EUR
+Recipient gets
+€920,00""",
+            (
+                Decimal("1000.00"),
+                "USD",
+                Decimal("0.92"),
+                "USD",
+                "EUR",
+                Decimal("920.00"),
+            ),
+            id="cross-currency-conversion",
+        ),
+    ],
+)
+def test_review_summary_parses_conversion_details(review_text, expected_summary):
+    """Verify same-currency and converted review summaries are parsed correctly."""
+    assert SendMoneyPage._parse_review_summary(review_text) == expected_summary
+
+
 @pytest.mark.regression
 @pytest.mark.negative
 @pytest.mark.high
@@ -41,6 +97,19 @@ def test_sm_002_registered_user_transfer_completes(logged_in_page):
         "Set DUMMYPAY_RECIPIENT_EMAIL to the email of an existing recipient."
     )
     send_money = SendMoneyPage(logged_in_page)
+
+    send_money.open("/history")
+    previous_rows = logged_in_page.get_by_test_id("transaction-row")
+    previous_transaction_id = None
+    if previous_rows.count():
+        previous_rows.first.click()
+        previous_details = logged_in_page.get_by_test_id("transaction-detail")
+        previous_transaction_id = _transaction_detail_value(
+            previous_details, "Transaction ID"
+        )
+        logged_in_page.get_by_role("dialog").get_by_role(
+            "button", name="Close"
+        ).click()
 
     send_money.open("/send")
     send_money.wait_for_step("Recipient")
@@ -78,6 +147,11 @@ def test_sm_002_registered_user_transfer_completes(logged_in_page):
         f"Expected conversion to {recipient_currency}, "
         f"but review shows {rate_recipient_currency}."
     )
+    assert exchange_rate > 0, f"Expected a positive exchange rate, got {exchange_rate}."
+    if source_currency == recipient_currency:
+        assert exchange_rate == Decimal("1"), (
+            "Transfers between the same currency must use a 1:1 exchange rate."
+        )
     expected_received_amount = (summary_amount * exchange_rate).quantize(
         Decimal("0.01"), rounding=ROUND_HALF_UP
     )
@@ -99,9 +173,44 @@ def test_sm_002_registered_user_transfer_completes(logged_in_page):
         str(wallets.get_wallet_balance(source_currency))
     ).quantize(Decimal("0.01"))
     expected_balance_after = balance_before - amount_to_send
-    assert abs(balance_after - expected_balance_after) <= Decimal("0.01"), (
+    assert balance_after == expected_balance_after, (
         f"Expected {source_currency} balance to decrease from {balance_before} "
         f"to {expected_balance_after}, but it is {balance_after}."
+    )
+
+    send_money.open("/history")
+    expect(
+        logged_in_page.get_by_role("heading", name="Transaction History")
+    ).to_be_visible()
+    latest_transfer = logged_in_page.get_by_test_id("transaction-row").first
+    expect(latest_transfer).to_be_visible()
+    latest_transfer.click()
+
+    transaction_details = logged_in_page.get_by_test_id("transaction-detail")
+    expect(transaction_details).to_be_visible()
+    transaction_id = _transaction_detail_value(transaction_details, "Transaction ID")
+    assert transaction_id
+    assert transaction_id != previous_transaction_id, (
+        "The latest transaction is unchanged; the transfer was not recorded."
+    )
+    assert _transaction_detail_value(transaction_details, "Status").lower() == "completed"
+    assert _transaction_detail_value(
+        transaction_details, "Recipient"
+    ).endswith(RECIPIENT_EMAIL)
+    sent_text = _transaction_detail_value(transaction_details, "Amount sent")
+    assert SendMoneyPage._extract_amount(sent_text) == amount_to_send, (
+        f"Expected {amount_to_send} to be recorded as sent, got {sent_text!r}."
+    )
+    assert _transaction_detail_value(
+        transaction_details, "Sending currency"
+    ) == source_currency
+    received_text = _transaction_detail_value(
+        transaction_details, "Amount received"
+    )
+    assert SendMoneyPage._extract_amount(received_text) == expected_received_amount
+    assert received_text.endswith(f"({rate_recipient_currency})"), (
+        f"Expected received currency {rate_recipient_currency}, "
+        f"but transaction history shows {received_text!r}."
     )
 
 
