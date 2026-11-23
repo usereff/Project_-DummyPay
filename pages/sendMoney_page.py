@@ -1,5 +1,5 @@
 import re
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 from playwright.sync_api import expect
 
@@ -80,41 +80,107 @@ class SendMoneyPage(BasePage):
         self,
     ) -> tuple[Decimal, str, Decimal, str, str, Decimal]:
         page_text = self.page.locator("body").inner_text()
+        return self._parse_review_summary(page_text)
 
-        match = re.search(
-            r"You send\s*\n\s*([^\n]+)\s*\n"
-            r"Sending currency\s*\n\s*([A-Z]{3})\s*\n"
-            r"Exchange rate\s*\n\s*1\s+([A-Z]{3})\s*=\s*([\d,.]+)\s+([A-Z]{3})\s*\n"
-            r"Recipient gets\s*\n\s*([^\n]+)",
-            page_text,
+    @staticmethod
+    def _parse_review_summary(
+        page_text: str,
+    ) -> tuple[Decimal, str, Decimal, str, str, Decimal]:
+        lines = [line.strip() for line in page_text.splitlines() if line.strip()]
+        sent_amount_text = SendMoneyPage._value_after_label(lines, "You send")
+        sending_currency = SendMoneyPage._value_after_label(
+            lines, "Sending currency"
+        )
+        exchange_rate_text = SendMoneyPage._value_after_label(
+            lines, "Exchange rate"
+        )
+        received_amount_text = SendMoneyPage._value_after_label(
+            lines, "Recipient gets"
         )
 
-        if match is None:
+        if not re.fullmatch(r"[A-Z]{3}", sending_currency):
             raise AssertionError(
-                "Transfer amount and exchange details were not shown."
+                f"Could not read the sending currency from: {sending_currency!r}"
             )
 
-        sent_amount = self._extract_amount(match.group(1))
-        sending_currency = match.group(2)
-        rate = Decimal(match.group(4).replace(",", ""))
-        received_amount = self._extract_amount(match.group(6))
+        if re.fullmatch(r"No conversion \(same currency\)", exchange_rate_text, re.I):
+            rate = Decimal("1")
+            rate_source_currency = sending_currency
+            rate_recipient_currency = sending_currency
+        else:
+            rate_match = re.search(
+                r"1\s+([A-Z]{3})\s*=\s*([\d.,]+)\s+([A-Z]{3})",
+                exchange_rate_text,
+            )
+            if rate_match is None:
+                raise AssertionError(
+                    f"Could not read the exchange rate from: {exchange_rate_text!r}"
+                )
+            rate_source_currency = rate_match.group(1)
+            rate = SendMoneyPage._parse_number(rate_match.group(2), is_amount=False)
+            rate_recipient_currency = rate_match.group(3)
+
+        sent_amount = SendMoneyPage._extract_amount(sent_amount_text)
+        received_amount = SendMoneyPage._extract_amount(received_amount_text)
 
         return (
             sent_amount,
             sending_currency,
             rate,
-            match.group(3),
-            match.group(5),
+            rate_source_currency,
+            rate_recipient_currency,
             received_amount,
         )
 
     @staticmethod
+    def _value_after_label(lines: list[str], label: str) -> str:
+        for index, line in enumerate(lines):
+            if line.casefold() == label.casefold():
+                if index + 1 < len(lines):
+                    return lines[index + 1]
+                break
+
+            if line.casefold().startswith(f"{label.casefold()} "):
+                return line[len(label):].strip().lstrip(":").strip()
+
+            if line.casefold().startswith(f"{label.casefold()}:"):
+                return line[len(label) + 1:].strip()
+
+        raise AssertionError(f"Could not find {label!r} in the transfer review.")
+
+    @staticmethod
     def _extract_amount(text: str) -> Decimal:
-        match = re.search(r"[\d,]+\.\d{2}", text)
+        match = re.search(r"(?<!\w)\d[\d.,]*", text)
 
         if match is None:
             raise AssertionError(
                 f"Could not read a monetary amount from: {text!r}"
             )
 
-        return Decimal(match.group(0).replace(",", ""))
+        return SendMoneyPage._parse_number(match.group(0), is_amount=True)
+
+    @staticmethod
+    def _parse_number(text: str, is_amount: bool) -> Decimal:
+        token = text.strip()
+        separators = {separator for separator in token if separator in ".,"}
+        decimal_separator = None
+
+        if len(separators) == 2:
+            decimal_separator = max(separators, key=token.rfind)
+        elif len(separators) == 1:
+            separator = next(iter(separators))
+            fractional_digits = len(token.rsplit(separator, 1)[1])
+            if not is_amount or fractional_digits == 2:
+                decimal_separator = separator
+
+        if decimal_separator is None:
+            normalized = token.replace(",", "").replace(".", "")
+        else:
+            integer, fraction = token.rsplit(decimal_separator, 1)
+            integer = integer.replace(",", "").replace(".", "")
+            normalized = f"{integer}.{fraction}"
+
+        try:
+            return Decimal(normalized)
+        except InvalidOperation as error:
+            raise AssertionError(f"Could not parse numeric value: {text!r}") from error
