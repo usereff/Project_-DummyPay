@@ -3,7 +3,7 @@ from decimal import Decimal, ROUND_HALF_UP
 import pytest
 from playwright.sync_api import expect
 
-from pages.test_sendMoney_page import SendMoneyPage
+from pages.sendMoney_page import SendMoneyPage
 from pages.wallets_page import WalletsPage
 from utilities.config import EMAIL, RECIPIENT_EMAIL
 

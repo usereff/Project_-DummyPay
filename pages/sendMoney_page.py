@@ -39,7 +39,9 @@ class SendMoneyPage(BasePage):
             return False
 
     def wait_for_step(self, step: str):
-        expect(self.page.locator(self.ACTIVE_STEP)).to_have_text(step, timeout=15000)
+        expect(self.page.locator(self.ACTIVE_STEP)).to_have_text(
+            step, timeout=15000
+        )
 
     def click_continue(self):
         self.click(self.CONTINUE_BUTTON)
@@ -68,14 +70,17 @@ class SendMoneyPage(BasePage):
     def get_recipient_currency(self) -> str:
         page_text = self.page.locator("body").inner_text()
         match = re.search(r"Receives in\s*\n\s*([A-Z]{3})\b", page_text)
+
         if match is None:
             raise AssertionError("Recipient currency was not shown.")
+
         return match.group(1)
 
     def get_review_summary(
         self,
     ) -> tuple[Decimal, str, Decimal, str, str, Decimal]:
         page_text = self.page.locator("body").inner_text()
+
         match = re.search(
             r"You send\s*\n\s*([^\n]+)\s*\n"
             r"Sending currency\s*\n\s*([A-Z]{3})\s*\n"
@@ -83,13 +88,17 @@ class SendMoneyPage(BasePage):
             r"Recipient gets\s*\n\s*([^\n]+)",
             page_text,
         )
+
         if match is None:
-            raise AssertionError("Transfer amount and exchange details were not shown.")
+            raise AssertionError(
+                "Transfer amount and exchange details were not shown."
+            )
 
         sent_amount = self._extract_amount(match.group(1))
         sending_currency = match.group(2)
         rate = Decimal(match.group(4).replace(",", ""))
         received_amount = self._extract_amount(match.group(6))
+
         return (
             sent_amount,
             sending_currency,
@@ -102,6 +111,10 @@ class SendMoneyPage(BasePage):
     @staticmethod
     def _extract_amount(text: str) -> Decimal:
         match = re.search(r"[\d,]+\.\d{2}", text)
+
         if match is None:
-            raise AssertionError(f"Could not read a monetary amount from: {text!r}")
+            raise AssertionError(
+                f"Could not read a monetary amount from: {text!r}"
+            )
+
         return Decimal(match.group(0).replace(",", ""))
