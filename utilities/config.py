@@ -9,6 +9,7 @@ TIMEOUT = 10000  # milliseconds
 EMAIL = os.getenv("DUMMYPAY_EMAIL")
 PASSWORD = os.getenv("DUMMYPAY_PASSWORD")
 RECIPIENT_EMAIL = os.getenv("DUMMYPAY_RECIPIENT_EMAIL")
+DUMMYPAY_ANON_KEY = os.getenv("DUMMYPAY_ANON_KEY")
 HEADLESS = os.getenv("HEADLESS", "true").lower() == "true"
 
 # ערכי בדיקה משותפים

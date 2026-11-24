@@ -18,6 +18,8 @@ jobs:
       DUMMYPAY_EMAIL: ${{ secrets.DUMMYPAY_EMAIL }}
       DUMMYPAY_PASSWORD: ${{ secrets.DUMMYPAY_PASSWORD }}
       DUMMYPAY_RECIPIENT_EMAIL: ${{ secrets.DUMMYPAY_RECIPIENT_EMAIL }}
+      DUMMYPAY_ANON_KEY: ${{ secrets.DUMMYPAY_ANON_KEY }}
+
       HEADLESS: "true"
     steps:
       - name: Check out repository
