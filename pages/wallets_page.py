@@ -105,9 +105,16 @@ class WalletsPage(BasePage):
     # --- Total balance ---
 
     # מחזיר את היתרה הכוללת המוצגת (למשל 3652.71)
-    def get_total_balance(self) -> float:
-        m = self._find(r"Total balance \(approximate\)\s*[^\d]*?([\d,]+\.\d{2})")
-        return self._to_float(m.group(1))
+    # def get_total_balance(self) -> float:
+    #     m = self._find(r"Total balance \(approximate\)\s*[^\d]*?([\d,]+\.\d{2})")
+    #     return self._to_float(m.group(1))
+
+    def get_total_balance(self):
+        m = self._find(
+            r"Total balance\s*[^\d]*?([\d,]+\.\d{2})"
+        )
+        return float(m.group(1).replace(",", ""))
+
 
     # מחזיר את מטבע התצוגה של היתרה הכוללת ("shown in EUR")
     def get_total_balance_currency(self) -> str:

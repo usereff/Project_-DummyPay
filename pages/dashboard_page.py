@@ -8,9 +8,12 @@ class DashboardPage(BasePage):
     SEND_MONEY_BUTTON = "a:has-text('Send money'), button:has-text('Send money')"
     TOTAL_BALANCE = "text=Total balance"
     NOTIFICATIONS_VIEW_ALL = "a[href='/notifications']"
+
+
     
     # View All Locators
-    VIEW_ALL_BUTTON = "main a[href='/transactions']"    TRANSACTION_HISTORY_TITLE = "h1:has-text('Transaction History')"
+    VIEW_ALL_BUTTON = "main a[href='/history']"
+    TRANSACTION_HISTORY_TITLE = "h1:has-text('Transaction History')"
 
     def click_view_all(self):
         self.page.click(self.VIEW_ALL_BUTTON)
