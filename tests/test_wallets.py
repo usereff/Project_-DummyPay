@@ -1,13 +1,22 @@
 import pytest
 from pages.wallets_page import WalletsPage
+from utilities.config import TOLERANCE, DEFAULT_TEST_AMOUNT
 
 
 # מתחבר (דרך logged_in_page), נכנס לדשבורד, לוחץ על Wallets ורק אז הבדיקה מתחילה
-@pytest.fixture
-def wallets_page(logged_in_page):
-    wallets = WalletsPage(logged_in_page)
+# נכנס ל-Wallets פעם אחת לכל הקובץ
+@pytest.fixture(scope="module")
+def _wallets_opened(shared_logged_in_page):
+    wallets = WalletsPage(shared_logged_in_page)
     wallets.open_from_sidebar()
     return wallets
+
+
+# לפני כל בדיקה: מאפס את מצב הטופס, בלי לנווט מחדש
+@pytest.fixture
+def wallets_page(_wallets_opened):
+    _wallets_opened.reset_conversion_form()
+    return _wallets_opened
 
 
 # WL-001 (חיובית, Regression): הסכום המומר שווה לסכום כפול השער

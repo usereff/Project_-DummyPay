@@ -72,3 +72,14 @@ def logged_in_page(browser_instance, auth_state):
     yield page
 
     context.close()
+
+
+    # חלון אחד מחובר לכל קובץ בדיקות (נפתח פעם אחת ונסגר בסוף הקובץ)
+@pytest.fixture(scope="module")
+def shared_logged_in_page(browser_instance, auth_state):
+    context = browser_instance.new_context(storage_state=auth_state)
+    page = context.new_page()
+    page.goto(BASE_URL)
+    page.wait_for_selector("text=Total balance")
+    yield page
+    context.close()
