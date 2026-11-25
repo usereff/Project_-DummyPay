@@ -72,3 +72,4 @@ def logged_in_page(browser_instance, auth_state):
     yield page
 
     context.close()
+    
