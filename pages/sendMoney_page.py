@@ -21,6 +21,10 @@ class SendMoneyPage(BasePage):
     CONFIRM_SEND_BUTTON = "button:has-text('Confirm & send')"
     SEND_NOW_BUTTON = "button:has-text('Send now')"
 
+    def open(self, path: str = ""):
+        super().open(path)
+        self.page.wait_for_load_state("domcontentloaded")
+
     def enter_recipient_email(self, email: str):
         self.fill(self.RECIPIENT_INPUT, email)
 
@@ -39,15 +43,26 @@ class SendMoneyPage(BasePage):
             return False
 
     def wait_for_step(self, step: str):
-        expect(self.page.locator(self.ACTIVE_STEP)).to_have_text(
-            step, timeout=15000
-        )
+        expect(self.page.locator(self.ACTIVE_STEP)).to_have_text(step)
+        if step == "Recipient":
+            expect(self.page.locator(self.RECIPIENT_INPUT)).to_be_visible()
+        elif step == "Amount":
+            expect(self.page.locator(self.AMOUNT_INPUT)).to_be_visible()
+            expect(self.page.locator("select")).to_be_visible()
+            expect(self.page.get_by_role("radio").first).to_be_visible()
+            expect(self.page.locator(self.REVIEW_BUTTON)).to_be_visible()
+        elif step == "Review":
+            expect(
+                self.page.get_by_role("button", name="Confirm & send")
+            ).to_be_visible()
 
     def click_continue(self):
         self.click(self.CONTINUE_BUTTON)
 
     def select_amount_mode(self, mode: str):
-        self.page.get_by_role("radio", name=mode, exact=True).click()
+        radio = self.page.get_by_role("radio", name=mode, exact=True)
+        expect(radio).to_be_visible()
+        radio.click()
 
     def enter_amount(self, amount: str):
         self.fill(self.AMOUNT_INPUT, amount)
@@ -62,8 +77,11 @@ class SendMoneyPage(BasePage):
         self.click(self.SEND_NOW_BUTTON)
 
     def get_selected_wallet_balance(self) -> tuple[str, Decimal]:
-        currency = self.page.locator("select").input_value()
-        option_text = self.page.locator("select option:checked").inner_text()
+        wallet_select = self.page.locator("select")
+        expect(wallet_select).to_be_visible()
+        wallet_select.locator("option:checked").wait_for(state="attached")
+        currency = wallet_select.input_value()
+        option_text = wallet_select.locator("option:checked").inner_text()
         balance = self._extract_amount(option_text)
         return currency, balance
 
