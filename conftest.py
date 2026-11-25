@@ -72,6 +72,7 @@ def logged_in_page(browser_instance, auth_state):
     yield page
 
     context.close()
+    
 
 
     # חלון אחד מחובר לכל קובץ בדיקות (נפתח פעם אחת ונסגר בסוף הקובץ)

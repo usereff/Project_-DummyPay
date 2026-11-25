@@ -18,3 +18,14 @@ python -m pytest tests/test_sendmoney_api.py
 
 The test sends 100 minor units (1.00 in the sending currency). Use dedicated
 test accounts; do not use a service-role key.
+
+## Payment cards UI test
+
+Run the Payment Cards browser test with the configured test account:
+
+```powershell
+python -m pytest tests/test_payment_cards.py
+```
+
+The tests cover successful and rejected card additions, plus removal of a
+test-created card. Cards created by these tests are removed after verification.
