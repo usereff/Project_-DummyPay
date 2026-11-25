@@ -1,22 +1,21 @@
 import re
 import time
 from pages.base_page import BasePage
-from utilities.config import BASE_URL
-
+from utilities.config import BASE_URL, WALLETS_URL, TOLERANCE
 
 class WalletsPage(BasePage):
     """Page Object for the Wallets page."""
+
     # Locators
     WALLETS_LINK = "a[href='/wallets']"
     TITLE = "h1:has-text('Wallets')"
     SWAP_BUTTON = "button:has-text('Swap')"
 
+    # הודעות השגיאה האפשריות בשדה Amount
     ERROR_MESSAGES = [
         "Enter a valid positive number.",
         "Amount must be greater than zero.",
     ]
-
-
 
     # --- ניווט ---
 
@@ -40,8 +39,7 @@ class WalletsPage(BasePage):
     def _to_float(text: str) -> float:
         return float(text.replace(",", ""))
 
-
-        # מחפש בעמוד ערך לפי תבנית. מנסה שוב עד 10 שניות, כי הנתונים נטענים עם עיכוב
+    # מחפש בעמוד ערך לפי תבנית. מנסה שוב עד 10 שניות, כי הנתונים נטענים עם עיכוב
     def _find(self, pattern: str, timeout: float = 10.0):
         end = time.time() + timeout
         while True:
@@ -148,10 +146,6 @@ class WalletsPage(BasePage):
         return total
 
 
-# --- Conversion preview: ולידציה ---
-#השגיאה אם מכניסים סכום שלילי או אותיות
-    ERROR_MESSAGE = "text=Enter a valid positive number."
-
     # מוחק את תוכן שדה הסכום
     def clear_amount(self):
         self.page.get_by_label("Amount").fill("")
@@ -174,3 +168,9 @@ class WalletsPage(BasePage):
     # בודק שלא מוצג סכום מומר מספרי (מוצג מקף או שום מספר)
     def is_converted_amount_empty(self) -> bool:
         return self._wait_until(lambda: not re.search(r"\d", self.get_converted_text()))
+
+        # מחזיר את Conversion preview לברירת מחדל: סכום 100 והמטבעות המקוריים
+    def reset_conversion_form(self):
+        self.page.get_by_label("Amount").fill("100")
+        self._wait_until(lambda: self.get_converted_amount() > 0)
+

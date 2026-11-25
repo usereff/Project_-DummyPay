@@ -11,3 +11,8 @@ PASSWORD = os.getenv("DUMMYPAY_PASSWORD")
 RECIPIENT_EMAIL = os.getenv("DUMMYPAY_RECIPIENT_EMAIL")
 DUMMYPAY_ANON_KEY = os.getenv("DUMMYPAY_ANON_KEY")
 HEADLESS = os.getenv("HEADLESS", "true").lower() == "true"
+
+# ערכי בדיקה משותפים
+TOLERANCE = 0.01
+DEFAULT_TEST_AMOUNT = 200
+WALLETS_URL = f"{BASE_URL}/wallets"
