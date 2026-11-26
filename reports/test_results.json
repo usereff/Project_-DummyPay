@@ -1,0 +1,252 @@
+{
+    "project": "DummyPay",
+    "started_at": "2026-11-26T10:59:33.642194+02:00",
+    "finished_at": "2026-11-26T11:00:25.825248+02:00",
+    "duration": 52.068,
+    "environment": {
+        "python": "3.15.0",
+        "platform": "Windows-11-10.0.26300-SP0",
+        "pytest": "9.2.0"
+    },
+    "summary": {
+        "total": 11,
+        "passed": 10,
+        "failed": 1,
+        "skipped": 0,
+        "pass_rate": 90.91,
+        "exit_status": 1
+    },
+    "tests": [
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_001_history_page_shows_transactions_and_pagination",
+            "test_name": "test_th_001_history_page_shows_transactions_and_pagination",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 5.849,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_002_type_filter_shows_matching_transactions[Sent]",
+            "test_name": "test_th_002_type_filter_shows_matching_transactions[Sent]",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 4.03,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_002_type_filter_shows_matching_transactions[Received]",
+            "test_name": "test_th_002_type_filter_shows_matching_transactions[Received]",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 3.987,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_003_currency_filter_shows_matching_transactions[sent-eur]",
+            "test_name": "test_th_003_currency_filter_shows_matching_transactions[sent-eur]",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 4.493,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_003_currency_filter_shows_matching_transactions[received-ils]",
+            "test_name": "test_th_003_currency_filter_shows_matching_transactions[received-ils]",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 5.551,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_004_valid_date_range_keeps_matching_transactions",
+            "test_name": "test_th_004_valid_date_range_keeps_matching_transactions",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 3.473,
+            "markers": [
+                "medium",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "medium",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_005_date_range_without_transactions_shows_empty_state",
+            "test_name": "test_th_005_date_range_without_transactions_shows_empty_state",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 4.116,
+            "markers": [
+                "high",
+                "negative",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "negative"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_006_reversed_date_range_shows_no_transactions",
+            "test_name": "test_th_006_reversed_date_range_shows_no_transactions",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 3.957,
+            "markers": [
+                "medium",
+                "negative",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "negative"
+            ],
+            "priority": "medium",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_007_clear_resets_all_history_filters",
+            "test_name": "test_th_007_clear_resets_all_history_filters",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "failed",
+            "duration": 9.844,
+            "markers": [
+                "medium",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "medium",
+            "error": "logged_in_page = <Page url='https://dummypay.vercel.app/history'>\n\n    @pytest.mark.regression\n    @pytest.mark.positive\n    @pytest.mark.medium\n    def test_th_007_clear_resets_all_history_filters(logged_in_page):\n        \"\"\"TH-007: Verify Clear resets both date fields and selected filters.\"\"\"\n        history = TransactionHistoryPage(logged_in_page)\n        history.open_history()\n        history.select_type(\"Sent\")\n        history.select_currency(\"EUR\")\n        history.set_date_range(\"2000-01-01\", \"2099-12-31\")\n    \n        history.clear_filters()\n    \n        expect(logged_in_page.locator(history.FROM_DATE)).to_have_value(\"\")\n        expect(logged_in_page.locator(history.TO_DATE)).to_have_value(\"\")\n        expect(logged_in_page.locator(history.TYPE_FILTER)).to_contain_text(\"All types\")\n>       expect(history.page.locator(history.CURRENCY_FILTER)).to_contain_text(\n            \"All currencies\"\n        )\nE       AssertionError: Locator expected to contain text 'All currencies'\nE       Actual value: EUR \nE       Call log:\nE         - Expect \"to_contain_text\" locator(\"#filter-currency\") with timeout 5000ms\nE         - waiting for locator(\"#filter-currency\")\nE           14 × locator resolved to <button dir=\"ltr\" type=\"button\" role=\"combobox\" data-state=\"closed\" data-size=\"default\" id=\"filter-currency\" aria-expanded=\"false\" aria-autocomplete=\"none\" data-slot=\"select-trigger\" class=\"flex items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-…>…</button>\nE              - unexpected value \"EUR\"\nE       \nE       Aria snapshot:\nE       - combobox \"Currency\": EUR\n\ntests\\test_transaction_history.py:141: AssertionError"
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_008_pagination_moves_forward_and_back",
+            "test_name": "test_th_008_pagination_moves_forward_and_back",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 3.129,
+            "markers": [
+                "medium",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "medium",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_009_transaction_row_opens_and_closes_details",
+            "test_name": "test_th_009_transaction_row_opens_and_closes_details",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 3.639,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        }
+    ]
+}

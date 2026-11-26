@@ -1,0 +1,1812 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DummyPay | QA Dashboard</title>
+
+    <style>
+        
+:root {
+    --primary: #16a779;
+    --primary-dark: #10845f;
+    --sidebar: #14243d;
+    --background: #f4f6fa;
+    --surface: #ffffff;
+    --text: #172338;
+    --muted: #8792a5;
+    --border: #e8edf3;
+    --success: #16a779;
+    --danger: #ef5350;
+    --purple: #8064d8;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 250px;
+    background: var(--sidebar);
+    color: white;
+    padding: 28px 18px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 8px 35px;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--primary);
+    display: grid;
+    place-items: center;
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.brand h2 {
+    font-size: 19px;
+    letter-spacing: 0.3px;
+}
+
+.brand span {
+    font-size: 9px;
+    color: #9cacc3;
+    letter-spacing: 1px;
+}
+
+.nav-label {
+    font-size: 10px;
+    color: #7889a4;
+    letter-spacing: 1.3px;
+    padding: 0 12px;
+    margin-bottom: 12px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 14px;
+    margin-bottom: 6px;
+    color: #aebbd0;
+    text-decoration: none;
+    border-radius: 9px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: #263c59;
+    color: white;
+}
+
+.nav-item.active {
+    border-left: 3px solid #35c394;
+}
+
+.nav-item span {
+    font-size: 18px;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 14px 8px;
+    font-size: 11px;
+    color: #aebbd0;
+    border-top: 1px solid #2c405d;
+}
+
+.online-dot,
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #36c58e;
+    border-radius: 50%;
+    margin-right: 7px;
+}
+
+/* MAIN CONTENT */
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 34px 42px;
+    max-width: 1700px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.breadcrumb {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.topbar h1 {
+    font-size: 27px;
+    margin-top: 9px;
+    font-weight: 700;
+}
+
+.subtitle,
+.section-heading p,
+.panel-heading p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.run-status {
+    display: flex;
+    align-items: center;
+    background: #e6f7f0;
+    color: #13875f;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.run-status.has-failures {
+    background: #fff0ef;
+    color: #cf403d;
+}
+
+.has-failures .status-dot {
+    background: var(--danger);
+}
+
+/* SECTION HEADINGS */
+
+section {
+    margin-bottom: 34px;
+    scroll-margin-top: 20px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.section-heading h2 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.results-count {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* KPI CARDS */
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 22px;
+    box-shadow: 0 3px 12px rgba(25, 43, 70, 0.025);
+}
+
+.kpi-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    margin-bottom: 17px;
+}
+
+.kpi-icon.blue {
+    color: #4384d9;
+    background: #eaf2ff;
+}
+
+.kpi-icon.green {
+    color: #16a779;
+    background: #e5f7ef;
+}
+
+.kpi-icon.red {
+    color: #ef5350;
+    background: #fff0ef;
+}
+
+.kpi-icon.purple {
+    color: var(--purple);
+    background: #f0edff;
+}
+
+.kpi-label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.kpi-card strong {
+    display: block;
+    font-size: 29px;
+    margin: 8px 0 5px;
+    font-weight: 700;
+}
+
+.kpi-card small {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* CHARTS */
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 24px;
+    box-shadow: 0 3px 12px rgba(25, 43, 70, 0.025);
+    min-width: 0;
+}
+
+.panel-heading {
+    margin-bottom: 22px;
+}
+
+.panel-heading h3 {
+    font-size: 14px;
+}
+
+.donut-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 20px;
+    min-height: 180px;
+}
+
+#donut-chart {
+    width: 165px;
+    max-width: 48%;
+}
+
+#donut-chart svg {
+    width: 100%;
+    display: block;
+}
+
+.donut-total {
+    font-size: 22px;
+    font-weight: 700;
+    fill: var(--text);
+}
+
+.donut-caption {
+    font-size: 8px;
+    fill: var(--muted);
+    letter-spacing: 1px;
+}
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.legend > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend strong {
+    color: var(--text);
+    margin-left: auto;
+}
+
+.legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+}
+
+.green-bg {
+    background: var(--success);
+}
+
+.red-bg {
+    background: var(--danger);
+}
+
+.gray-bg {
+    background: #94a3b8;
+}
+
+/* BAR CHART */
+
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.bar-label span {
+    color: #647087;
+}
+
+.bar-label strong {
+    color: var(--text);
+}
+
+.bar-track {
+    width: 100%;
+    height: 9px;
+    background: #edf1f6;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #16a779, #47c69b);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* ENVIRONMENT */
+
+.environment-panel {
+    margin-top: 18px;
+}
+
+.environment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.environment-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.environment-grid span {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.environment-grid strong {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+/* TABLE */
+
+.table-toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.table-toolbar input,
+.table-toolbar select {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 13px;
+    font-family: inherit;
+    font-size: 12px;
+    background: white;
+    color: var(--text);
+}
+
+.table-toolbar input {
+    width: 280px;
+    max-width: 100%;
+}
+
+.table-toolbar input:focus,
+.table-toolbar select:focus {
+    outline: 2px solid #c2ebdd;
+    border-color: var(--primary);
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+    font-size: 11px;
+}
+
+thead {
+    background: #f7f9fc;
+}
+
+th {
+    text-align: left;
+    color: #8994a7;
+    font-size: 9px;
+    letter-spacing: 0.7px;
+    padding: 14px 12px;
+}
+
+td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #edf0f5;
+    color: #68758b;
+}
+
+.test-name {
+    color: var(--text);
+    font-weight: 600;
+}
+
+tbody tr:hover {
+    background: #f9fbfd;
+}
+
+.status-badge,
+.priority-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.passed {
+    background: #e5f7ef;
+    color: #12835d;
+}
+
+.status-badge.failed {
+    background: #fff0ef;
+    color: #d64541;
+}
+
+.status-badge.skipped {
+    background: #eef1f5;
+    color: #64748b;
+}
+
+.priority-badge {
+    background: #f1f3f7;
+    color: #59677d;
+}
+
+.empty-state {
+    padding: 30px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* FAILURE ANALYSIS */
+
+.success-panel {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    border: 1px solid #cceee0;
+    background: #effaf5;
+    border-radius: 12px;
+    color: #16845f;
+}
+
+.success-panel > span {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.success-panel strong {
+    font-size: 13px;
+}
+
+.success-panel p {
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.failure-card {
+    background: white;
+    border: 1px solid #f3d1d0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.failure-card h3 {
+    font-size: 14px;
+    color: var(--danger);
+}
+
+.failure-card p {
+    color: var(--muted);
+    font-size: 11px;
+    margin: 8px 0;
+}
+
+.failure-card pre {
+    background: #f8f9fb;
+    padding: 15px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 11px;
+    color: #5c6472;
+}
+
+/* FOOTER */
+
+footer {
+    padding: 25px 0;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    text-align: center;
+    font-size: 10px;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 1100px) {
+
+    .main-content {
+        padding: 28px 24px;
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .environment-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 750px) {
+
+    .sidebar {
+        width: 65px;
+        padding: 20px 9px;
+    }
+
+    .brand {
+        justify-content: center;
+        padding: 0 0 30px;
+    }
+
+    .brand > div:last-child,
+    .nav-label,
+    .nav-item:not(.active),
+    .sidebar-footer {
+        display: none;
+    }
+
+    .nav-item {
+        justify-content: center;
+        padding: 13px 5px;
+    }
+
+    .nav-item.active {
+        border-left: none;
+    }
+
+    .main-content {
+        padding: 23px 14px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-grid {
+        gap: 10px;
+    }
+
+    .kpi-card {
+        padding: 15px;
+    }
+
+    .kpi-card strong {
+        font-size: 24px;
+    }
+
+    .panel {
+        padding: 17px;
+    }
+
+    .table-toolbar {
+        flex-direction: column;
+    }
+
+    .table-toolbar input {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .environment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .donut-container {
+        flex-direction: column;
+    }
+
+    .legend {
+        width: 100%;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">D</div>
+            <div>
+                <h2>DummyPay</h2>
+                <span>QUALITY ASSURANCE</span>
+            </div>
+        </div>
+
+        <div class="nav-label">WORKSPACE</div>
+
+        <a href="#overview" class="nav-item active">
+            <span>▦</span> Overview
+        </a>
+
+        <a href="#analytics" class="nav-item">
+            <span>◷</span> Analytics
+        </a>
+
+        <a href="#test-results" class="nav-item">
+            <span>☷</span> Test Results
+        </a>
+
+        <a href="#failures" class="nav-item">
+            <span>⚠</span> Failures
+        </a>
+
+        <div class="sidebar-footer">
+            <span class="online-dot"></span>
+            Test reporting active
+        </div>
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <span class="breadcrumb">DummyPay / QA Dashboard</span>
+                <h1>Test Execution Overview</h1>
+                <p class="subtitle">Quality assurance and test analytics</p>
+            </div>
+
+            <div class="run-status">
+                <span class="status-dot"></span>
+                <span id="run-status-text">Completed</span>
+            </div>
+        </header>
+
+
+        <section id="overview">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Execution Summary</h2>
+                    <p>Overview of the latest test execution</p>
+                </div>
+            </div>
+
+            <div class="kpi-grid">
+
+                <div class="kpi-card">
+                    <div class="kpi-icon blue">▦</div>
+                    <span class="kpi-label">Total Tests</span>
+                    <strong id="total-tests">0</strong>
+                    <small>Collected test cases</small>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon green">✓</div>
+                    <span class="kpi-label">Passed</span>
+                    <strong id="passed-tests">0</strong>
+                    <small>Successful tests</small>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon red">✕</div>
+                    <span class="kpi-label">Failed</span>
+                    <strong id="failed-tests">0</strong>
+                    <small>Tests requiring attention</small>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon purple">◷</div>
+                    <span class="kpi-label">Execution Time</span>
+                    <strong id="execution-time">0s</strong>
+                    <small>Total test duration</small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section id="analytics">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Test Analytics</h2>
+                    <p>Visual analysis of test execution results</p>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Test Results Distribution</h3>
+                            <p>Execution status breakdown</p>
+                        </div>
+                    </div>
+
+                    <div class="donut-container">
+                        <div id="donut-chart"></div>
+
+                        <div class="legend">
+                            <div>
+                                <span class="legend-dot green-bg"></span>
+                                Passed
+                                <strong id="legend-passed">0</strong>
+                            </div>
+
+                            <div>
+                                <span class="legend-dot red-bg"></span>
+                                Failed
+                                <strong id="legend-failed">0</strong>
+                            </div>
+
+                            <div>
+                                <span class="legend-dot gray-bg"></span>
+                                Skipped
+                                <strong id="legend-skipped">0</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Tests by Module</h3>
+                            <p>Number of tests in each module</p>
+                        </div>
+                    </div>
+
+                    <div id="module-chart" class="bar-chart"></div>
+                </div>
+
+            </div>
+
+
+            <div class="panel environment-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Execution Environment</h3>
+                        <p>System information collected during execution</p>
+                    </div>
+                </div>
+
+                <div class="environment-grid">
+                    <div>
+                        <span>Python Version</span>
+                        <strong id="python-version">-</strong>
+                    </div>
+
+                    <div>
+                        <span>Pytest Version</span>
+                        <strong id="pytest-version">-</strong>
+                    </div>
+
+                    <div>
+                        <span>Operating System</span>
+                        <strong id="operating-system">-</strong>
+                    </div>
+
+                    <div>
+                        <span>Started At</span>
+                        <strong id="started-at">-</strong>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <section id="test-results">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Test Results</h2>
+                    <p>Detailed results of individual test cases</p>
+                </div>
+
+                <span id="results-count" class="results-count">0 tests</span>
+            </div>
+
+            <div class="panel">
+
+                <div class="table-toolbar">
+                    <input
+                        type="search"
+                        id="search-tests"
+                        placeholder="Search tests..."
+                    >
+
+                    <select id="status-filter">
+                        <option value="all">All statuses</option>
+                        <option value="passed">Passed</option>
+                        <option value="failed">Failed</option>
+                        <option value="skipped">Skipped</option>
+                    </select>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>TEST NAME</th>
+                                <th>MODULE</th>
+                                <th>STATUS</th>
+                                <th>PRIORITY</th>
+                                <th>TYPE</th>
+                                <th>DURATION</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="test-table-body"></tbody>
+                    </table>
+                </div>
+
+                <div id="empty-results" class="empty-state hidden">
+                    No matching tests found.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section id="failures">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Failure Analysis</h2>
+                    <p>Detailed information about failed tests</p>
+                </div>
+            </div>
+
+            <div id="failure-container"></div>
+
+        </section>
+
+
+        <footer>
+            DummyPay QA Dashboard · Automatically generated from Pytest
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script id="report-data" type="application/json">
+{
+  "project": "DummyPay",
+  "started_at": "2026-11-26T09:47:26.787634+02:00",
+  "finished_at": "2026-11-26T09:49:41.811336+02:00",
+  "duration": 134.849,
+  "environment": {
+    "python": "3.15.0",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "pytest": "9.2.0"
+  },
+  "summary": {
+    "total": 24,
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0,
+    "pass_rate": 100.0,
+    "exit_status": 0
+  },
+  "tests": [
+    {
+      "test_id": "tests/test_dashboard.py::test_db_001_send_money_button_redirects",
+      "test_name": "test_db_001_send_money_button_redirects",
+      "file": "tests/test_dashboard.py",
+      "module": "test_dashboard",
+      "status": "passed",
+      "duration": 6.84,
+      "markers": [
+        "high",
+        "positive",
+        "smoke"
+      ],
+      "test_type": [
+        "smoke"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_dashboard.py::test_db_002_view_all_redirects_to_transaction_history",
+      "test_name": "test_db_002_view_all_redirects_to_transaction_history",
+      "file": "tests/test_dashboard.py",
+      "module": "test_dashboard",
+      "status": "passed",
+      "duration": 1.885,
+      "markers": [
+        "high",
+        "positive",
+        "smoke"
+      ],
+      "test_type": [
+        "smoke"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_dashboard.py::test_db_003_view_all_notifications_navigates",
+      "test_name": "test_db_003_view_all_notifications_navigates",
+      "file": "tests/test_dashboard.py",
+      "module": "test_dashboard",
+      "status": "passed",
+      "duration": 4.066,
+      "markers": [
+        "medium",
+        "positive",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "medium",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_login.py::test_lg_001_login_with_valid_credentials",
+      "test_name": "test_lg_001_login_with_valid_credentials",
+      "file": "tests/test_login.py",
+      "module": "test_login",
+      "status": "passed",
+      "duration": 5.264,
+      "markers": [
+        "high",
+        "positive",
+        "smoke"
+      ],
+      "test_type": [
+        "smoke"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_login.py::test_lg_002_login_with_wrong_password_shows_error",
+      "test_name": "test_lg_002_login_with_wrong_password_shows_error",
+      "file": "tests/test_login.py",
+      "module": "test_login",
+      "status": "passed",
+      "duration": 6.16,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_payment_cards.py::test_pc_001_add_payment_card_successfully",
+      "test_name": "test_pc_001_add_payment_card_successfully",
+      "file": "tests/test_payment_cards.py",
+      "module": "test_payment_cards",
+      "status": "passed",
+      "duration": 18.947,
+      "markers": [
+        "high",
+        "positive",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_payment_cards.py::test_pc_002_rejects_card_with_invalid_number",
+      "test_name": "test_pc_002_rejects_card_with_invalid_number",
+      "file": "tests/test_payment_cards.py",
+      "module": "test_payment_cards",
+      "status": "passed",
+      "duration": 5.719,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_payment_cards.py::test_pc_003_remove_payment_card",
+      "test_name": "test_pc_003_remove_payment_card",
+      "file": "tests/test_payment_cards.py",
+      "module": "test_payment_cards",
+      "status": "passed",
+      "duration": 17.164,
+      "markers": [
+        "high",
+        "positive",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendMoney.py::test_review_summary_parses_conversion_details[same-currency-no-conversion]",
+      "test_name": "test_review_summary_parses_conversion_details[same-currency-no-conversion]",
+      "file": "tests/test_sendMoney.py",
+      "module": "test_sendMoney",
+      "status": "passed",
+      "duration": 0.001,
+      "markers": [],
+      "test_type": [],
+      "category": [],
+      "priority": "unassigned",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendMoney.py::test_review_summary_parses_conversion_details[cross-currency-conversion]",
+      "test_name": "test_review_summary_parses_conversion_details[cross-currency-conversion]",
+      "file": "tests/test_sendMoney.py",
+      "module": "test_sendMoney",
+      "status": "passed",
+      "duration": 0.002,
+      "markers": [],
+      "test_type": [],
+      "category": [],
+      "priority": "unassigned",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendMoney.py::test_sm_001_unregistered_email_shows_error",
+      "test_name": "test_sm_001_unregistered_email_shows_error",
+      "file": "tests/test_sendMoney.py",
+      "module": "test_sendMoney",
+      "status": "passed",
+      "duration": 3.897,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendMoney.py::test_sm_002_registered_user_transfer_completes",
+      "test_name": "test_sm_002_registered_user_transfer_completes",
+      "file": "tests/test_sendMoney.py",
+      "module": "test_sendMoney",
+      "status": "passed",
+      "duration": 10.559,
+      "markers": [
+        "high",
+        "positive",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendMoney.py::test_sm_003_cannot_send_money_to_self",
+      "test_name": "test_sm_003_cannot_send_money_to_self",
+      "file": "tests/test_sendMoney.py",
+      "module": "test_sendMoney",
+      "status": "passed",
+      "duration": 4.289,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendMoney.py::test_sm_004_invalid_amount_shows_error_and_blocks_transfer[i-send-zero]",
+      "test_name": "test_sm_004_invalid_amount_shows_error_and_blocks_transfer[i-send-zero]",
+      "file": "tests/test_sendMoney.py",
+      "module": "test_sendMoney",
+      "status": "passed",
+      "duration": 5.17,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendMoney.py::test_sm_004_invalid_amount_shows_error_and_blocks_transfer[i-send-over-balance]",
+      "test_name": "test_sm_004_invalid_amount_shows_error_and_blocks_transfer[i-send-over-balance]",
+      "file": "tests/test_sendMoney.py",
+      "module": "test_sendMoney",
+      "status": "passed",
+      "duration": 4.8,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendMoney.py::test_sm_004_invalid_amount_shows_error_and_blocks_transfer[recipient-gets-zero]",
+      "test_name": "test_sm_004_invalid_amount_shows_error_and_blocks_transfer[recipient-gets-zero]",
+      "file": "tests/test_sendMoney.py",
+      "module": "test_sendMoney",
+      "status": "passed",
+      "duration": 4.497,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendMoney.py::test_sm_004_invalid_amount_shows_error_and_blocks_transfer[recipient-gets-over-balance]",
+      "test_name": "test_sm_004_invalid_amount_shows_error_and_blocks_transfer[recipient-gets-over-balance]",
+      "file": "tests/test_sendMoney.py",
+      "module": "test_sendMoney",
+      "status": "passed",
+      "duration": 5.848,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_sendmoney_api.py::test_sendmoney_via_api_debits_wallet_and_records_transaction",
+      "test_name": "test_sendmoney_via_api_debits_wallet_and_records_transaction",
+      "file": "tests/test_sendmoney_api.py",
+      "module": "test_sendmoney_api",
+      "status": "passed",
+      "duration": 3.789,
+      "markers": [
+        "api"
+      ],
+      "test_type": [
+        "api"
+      ],
+      "category": [],
+      "priority": "unassigned",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_wallets.py::test_wl_001_conversion_preview_equals_amount_times_rate",
+      "test_name": "test_wl_001_conversion_preview_equals_amount_times_rate",
+      "file": "tests/test_wallets.py",
+      "module": "test_wallets",
+      "status": "passed",
+      "duration": 5.303,
+      "markers": [
+        "high",
+        "positive",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_wallets.py::test_wl_002_total_balance_equals_sum_of_wallets",
+      "test_name": "test_wl_002_total_balance_equals_sum_of_wallets",
+      "file": "tests/test_wallets.py",
+      "module": "test_wallets",
+      "status": "passed",
+      "duration": 3.774,
+      "markers": [
+        "high",
+        "positive",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_wallets.py::test_wl_003_swap_reverses_currencies",
+      "test_name": "test_wl_003_swap_reverses_currencies",
+      "file": "tests/test_wallets.py",
+      "module": "test_wallets",
+      "status": "passed",
+      "duration": 4.575,
+      "markers": [
+        "medium",
+        "positive",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "positive"
+      ],
+      "priority": "medium",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_wallets.py::test_wl_004_negative_amount_shows_error",
+      "test_name": "test_wl_004_negative_amount_shows_error",
+      "file": "tests/test_wallets.py",
+      "module": "test_wallets",
+      "status": "passed",
+      "duration": 3.99,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_wallets.py::test_wl_005_letters_in_amount_show_error",
+      "test_name": "test_wl_005_letters_in_amount_show_error",
+      "file": "tests/test_wallets.py",
+      "module": "test_wallets",
+      "status": "passed",
+      "duration": 4.031,
+      "markers": [
+        "high",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "high",
+      "error": null
+    },
+    {
+      "test_id": "tests/test_wallets.py::test_wl_006_zero_amount_shows_error",
+      "test_name": "test_wl_006_zero_amount_shows_error",
+      "file": "tests/test_wallets.py",
+      "module": "test_wallets",
+      "status": "passed",
+      "duration": 4.279,
+      "markers": [
+        "medium",
+        "negative",
+        "regression"
+      ],
+      "test_type": [
+        "regression"
+      ],
+      "category": [
+        "negative"
+      ],
+      "priority": "medium",
+      "error": null
+    }
+  ]
+}
+</script>
+
+
+<script>
+
+const report = JSON.parse(
+    document.getElementById("report-data").textContent
+);
+
+const tests = report.tests || [];
+const summary = report.summary || {};
+
+
+function setText(id, value) {
+    document.getElementById(id).textContent = value;
+}
+
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+}
+
+
+function formatDuration(seconds) {
+    if (seconds >= 60) {
+        const minutes = Math.floor(seconds / 60);
+        const remaining = Math.round(seconds % 60);
+
+        return `${minutes}m ${remaining}s`;
+    }
+
+    return `${seconds.toFixed(2)}s`;
+}
+
+
+function formatDate(value) {
+    if (!value) return "-";
+
+    return new Date(value).toLocaleString();
+}
+
+
+function renderSummary() {
+
+    setText("total-tests", summary.total ?? 0);
+    setText("passed-tests", summary.passed ?? 0);
+    setText("failed-tests", summary.failed ?? 0);
+
+    setText(
+        "execution-time",
+        formatDuration(report.duration ?? 0)
+    );
+
+    setText("legend-passed", summary.passed ?? 0);
+    setText("legend-failed", summary.failed ?? 0);
+    setText("legend-skipped", summary.skipped ?? 0);
+
+    const failed = summary.failed ?? 0;
+
+    setText(
+        "run-status-text",
+        failed > 0 ? "Completed with failures" : "Completed"
+    );
+
+    if (failed > 0) {
+        document.querySelector(".run-status").classList.add("has-failures");
+    }
+}
+
+
+function renderDonutChart() {
+
+    const passed = summary.passed ?? 0;
+    const failed = summary.failed ?? 0;
+    const skipped = summary.skipped ?? 0;
+    const total = passed + failed + skipped;
+
+    const radius = 42;
+    const circumference = 2 * Math.PI * radius;
+
+    const segments = [
+        { value: passed, color: "#16a779" },
+        { value: failed, color: "#ef5350" },
+        { value: skipped, color: "#94a3b8" }
+    ];
+
+    let offset = 0;
+
+    const circles = segments.map(segment => {
+
+        const length = total
+            ? segment.value / total * circumference
+            : 0;
+
+        const circle = `
+            <circle
+                cx="60"
+                cy="60"
+                r="${radius}"
+                fill="none"
+                stroke="${segment.color}"
+                stroke-width="13"
+                stroke-dasharray="${length} ${circumference - length}"
+                stroke-dashoffset="${-offset}"
+            />
+        `;
+
+        offset += length;
+
+        return circle;
+
+    }).join("");
+
+    document.getElementById("donut-chart").innerHTML = `
+        <svg viewBox="0 0 120 120" role="img"
+             aria-label="Test results distribution">
+            <circle
+                cx="60"
+                cy="60"
+                r="${radius}"
+                fill="none"
+                stroke="#edf1f5"
+                stroke-width="13"
+            />
+
+            <g transform="rotate(-90 60 60)">
+                ${circles}
+            </g>
+
+            <text x="60" y="57"
+                  text-anchor="middle"
+                  class="donut-total">
+                ${total}
+            </text>
+
+            <text x="60" y="72"
+                  text-anchor="middle"
+                  class="donut-caption">
+                TESTS
+            </text>
+        </svg>
+    `;
+}
+
+
+function renderModuleChart() {
+
+    const modules = {};
+
+    tests.forEach(test => {
+        const module = test.module || "Other";
+
+        modules[module] = (modules[module] || 0) + 1;
+    });
+
+    const entries = Object.entries(modules);
+    const maxValue = Math.max(1, ...entries.map(item => item[1]));
+
+    const container = document.getElementById("module-chart");
+
+    if (!entries.length) {
+        container.textContent = "No module data available.";
+        return;
+    }
+
+    container.innerHTML = entries.map(([name, count]) => {
+
+        const width = count / maxValue * 100;
+
+        return `
+            <div class="bar-item">
+                <div class="bar-label">
+                    <span>${escapeHTML(name)}</span>
+                    <strong>${count}</strong>
+                </div>
+
+                <div class="bar-track">
+                    <div class="bar-fill" style="width:${width}%"></div>
+                </div>
+            </div>
+        `;
+
+    }).join("");
+}
+
+
+function renderEnvironment() {
+
+    const environment = report.environment || {};
+
+    setText("python-version", environment.python || "-");
+    setText("pytest-version", environment.pytest || "-");
+    setText("operating-system", environment.platform || "-");
+
+    setText(
+        "started-at",
+        formatDate(report.started_at)
+    );
+}
+
+
+function renderTestTable() {
+
+    const search = document.getElementById("search-tests")
+        .value.toLowerCase();
+
+    const status = document.getElementById("status-filter").value;
+
+    const filtered = tests.filter(test => {
+
+        const matchesSearch = [
+            test.test_name,
+            test.file,
+            test.module,
+            ...(test.markers || [])
+        ].join(" ").toLowerCase().includes(search);
+
+        const matchesStatus =
+            status === "all" || test.status === status;
+
+        return matchesSearch && matchesStatus;
+    });
+
+    setText("results-count", `${filtered.length} tests`);
+
+    document.getElementById("empty-results")
+        .classList.toggle("hidden", filtered.length > 0);
+
+    document.getElementById("test-table-body").innerHTML =
+        filtered.map(test => {
+
+            const markers = (test.test_type || []).join(", ") || "-";
+
+            return `
+                <tr>
+                    <td class="test-name">
+                        ${escapeHTML(test.test_name)}
+                    </td>
+
+                    <td>${escapeHTML(test.module)}</td>
+
+                    <td>
+                        <span class="status-badge ${escapeHTML(test.status)}">
+                            ${escapeHTML(test.status)}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="priority-badge">
+                            ${escapeHTML(test.priority)}
+                        </span>
+                    </td>
+
+                    <td>${escapeHTML(markers)}</td>
+
+                    <td>${formatDuration(test.duration || 0)}</td>
+                </tr>
+            `;
+
+        }).join("");
+}
+
+
+function renderFailures() {
+
+    const failures = tests.filter(test => test.status === "failed");
+
+    const container = document.getElementById("failure-container");
+
+    if (!failures.length) {
+        container.innerHTML = `
+            <div class="success-panel">
+                <span>✓</span>
+                <div>
+                    <strong>No test failures detected</strong>
+                    <p>All collected tests passed successfully.</p>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = failures.map(test => `
+        <div class="failure-card">
+            <h3>${escapeHTML(test.test_name)}</h3>
+
+            <p>${escapeHTML(test.file)}</p>
+
+            <pre>${escapeHTML(test.error || "No error details available.")}</pre>
+        </div>
+    `).join("");
+}
+
+
+document.getElementById("search-tests")
+    .addEventListener("input", renderTestTable);
+
+document.getElementById("status-filter")
+    .addEventListener("change", renderTestTable);
+
+
+renderSummary();
+renderDonutChart();
+renderModuleChart();
+renderEnvironment();
+renderTestTable();
+renderFailures();
+
+</script>
+
+</body>
+</html>
