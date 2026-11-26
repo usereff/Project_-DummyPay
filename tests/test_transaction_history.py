@@ -194,12 +194,22 @@ def test_th_009_transaction_row_opens_and_closes_details(logged_in_page):
         "Amount sent",
         "Sending currency",
         "Amount received",
-        "Exchange rate",
     ):
         value = history.detail_value(label)
         expect(value).to_be_visible()
         assert value.inner_text().strip(), f"{label} should have a value."
 
     expect(history.detail_value("Status")).to_have_text("completed")
+    sending_currency = history.detail_value("Sending currency").inner_text().strip()
+    received_amount = history.detail_value("Amount received").inner_text().strip()
+    received_currency = re.search(r"\(([A-Z]{3})\)\s*$", received_amount)
+    assert received_currency, (
+        f"Could not determine the received currency from {received_amount!r}."
+    )
+    if received_currency.group(1) != sending_currency:
+        exchange_rate = history.detail_value("Exchange rate")
+        expect(exchange_rate).to_be_visible()
+        assert exchange_rate.inner_text().strip()
+
     history.close_transaction()
     expect(logged_in_page.get_by_role("dialog")).to_have_count(0)
