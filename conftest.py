@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 
 from pages.login_page import LoginPage
 from utilities.config import BASE_URL, EMAIL, PASSWORD, HEADLESS
-
+pytest_plugins = ["utilities.reporting.pytest_dashboard"]
 
 AUTH_FILE = Path(__file__).parent / ".auth" / "state.json"
 
