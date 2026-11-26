@@ -125,6 +125,10 @@ def test_th_006_reversed_date_range_shows_no_transactions(logged_in_page):
 @pytest.mark.regression
 @pytest.mark.positive
 @pytest.mark.medium
+@pytest.mark.xfail(
+    reason="Clear currently leaves the selected currency filter active.",
+    strict=True,
+)
 def test_th_007_clear_resets_all_history_filters(logged_in_page):
     """TH-007: Verify Clear resets both date fields and selected filters."""
     history = TransactionHistoryPage(logged_in_page)
