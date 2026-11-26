@@ -1,0 +1,252 @@
+{
+    "project": "DummyPay",
+    "started_at": "2026-11-26T11:34:40.783935+02:00",
+    "finished_at": "2026-11-26T11:35:51.414489+02:00",
+    "duration": 70.36,
+    "environment": {
+        "python": "3.15.0",
+        "platform": "Windows-11-10.0.26300-SP0",
+        "pytest": "9.2.0"
+    },
+    "summary": {
+        "total": 11,
+        "passed": 10,
+        "failed": 0,
+        "skipped": 1,
+        "pass_rate": 90.91,
+        "exit_status": 0
+    },
+    "tests": [
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_001_history_page_shows_transactions_and_pagination",
+            "test_name": "test_th_001_history_page_shows_transactions_and_pagination",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 13.215,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_002_type_filter_shows_matching_transactions[Sent]",
+            "test_name": "test_th_002_type_filter_shows_matching_transactions[Sent]",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 5.588,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_002_type_filter_shows_matching_transactions[Received]",
+            "test_name": "test_th_002_type_filter_shows_matching_transactions[Received]",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 5.038,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_003_currency_filter_shows_matching_transactions[sent-eur]",
+            "test_name": "test_th_003_currency_filter_shows_matching_transactions[sent-eur]",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 6.254,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_003_currency_filter_shows_matching_transactions[received-ils]",
+            "test_name": "test_th_003_currency_filter_shows_matching_transactions[received-ils]",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 6.49,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_004_valid_date_range_keeps_matching_transactions",
+            "test_name": "test_th_004_valid_date_range_keeps_matching_transactions",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 4.144,
+            "markers": [
+                "medium",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "medium",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_005_date_range_without_transactions_shows_empty_state",
+            "test_name": "test_th_005_date_range_without_transactions_shows_empty_state",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 4.242,
+            "markers": [
+                "high",
+                "negative",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "negative"
+            ],
+            "priority": "high",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_006_reversed_date_range_shows_no_transactions",
+            "test_name": "test_th_006_reversed_date_range_shows_no_transactions",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 4.318,
+            "markers": [
+                "medium",
+                "negative",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "negative"
+            ],
+            "priority": "medium",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_007_clear_resets_all_history_filters",
+            "test_name": "test_th_007_clear_resets_all_history_filters",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "skipped",
+            "duration": 11.575,
+            "markers": [
+                "medium",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "medium",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_008_pagination_moves_forward_and_back",
+            "test_name": "test_th_008_pagination_moves_forward_and_back",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 4.383,
+            "markers": [
+                "medium",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "medium",
+            "error": null
+        },
+        {
+            "test_id": "tests/test_transaction_history.py::test_th_009_transaction_row_opens_and_closes_details",
+            "test_name": "test_th_009_transaction_row_opens_and_closes_details",
+            "file": "tests/test_transaction_history.py",
+            "module": "test_transaction_history",
+            "status": "passed",
+            "duration": 5.113,
+            "markers": [
+                "high",
+                "positive",
+                "regression"
+            ],
+            "test_type": [
+                "regression"
+            ],
+            "category": [
+                "positive"
+            ],
+            "priority": "high",
+            "error": null
+        }
+    ]
+}
